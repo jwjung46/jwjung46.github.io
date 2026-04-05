@@ -1,2 +1,2 @@
-# github.io
+# jwjung46.github.io
 MyFirstPage
