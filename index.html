@@ -1,12 +1,449 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>첫 페이지</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My First Page</title>
+  <style>
+    :root {
+      --bg: #0b0f10;
+      --panel: #11161a;
+      --line: #1d2a24;
+      --text: #d7ffe1;
+      --green: #7CFC98;
+      --green-strong: #45f882;
+      --muted: #8fb39a;
+      --danger: #ff6b6b;
+      --warn: #ffd166;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      background:
+        radial-gradient(circle at top, rgba(69, 248, 130, 0.08), transparent 35%),
+        linear-gradient(180deg, #0a0e11 0%, #0b0f10 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .wrap {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+      background: rgba(11, 15, 16, 0.72);
+      border-bottom: 1px solid rgba(124, 252, 152, 0.12);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: 0.02em;
+    }
+
+    .brand::before {
+      content: "●";
+      color: var(--green-strong);
+      text-shadow: 0 0 12px rgba(69, 248, 130, 0.8);
+      font-size: 12px;
+    }
+
+    .menu {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .menu a {
+      padding: 10px 14px;
+      border: 1px solid rgba(124, 252, 152, 0.22);
+      border-radius: 10px;
+      color: var(--green);
+      background: rgba(124, 252, 152, 0.04);
+      transition: 0.2s ease;
+    }
+
+    .menu a:hover {
+      transform: translateY(-1px);
+      border-color: rgba(124, 252, 152, 0.45);
+      background: rgba(124, 252, 152, 0.1);
+      box-shadow: 0 0 18px rgba(69, 248, 130, 0.12);
+    }
+
+    .hero {
+      padding: 56px 0 28px;
+    }
+
+    .terminal {
+      background: linear-gradient(180deg, rgba(17, 22, 26, 0.98), rgba(10, 14, 17, 0.98));
+      border: 1px solid rgba(124, 252, 152, 0.14);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .terminal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(124, 252, 152, 0.12);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot.red { background: var(--danger); }
+    .dot.yellow { background: var(--warn); }
+    .dot.green { background: var(--green-strong); }
+
+    .terminal-title {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .terminal-body {
+      padding: 32px 24px 36px;
+    }
+
+    .line {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      line-height: 1.7;
+      word-break: keep-all;
+    }
+
+    .prompt {
+      color: var(--green-strong);
+      white-space: nowrap;
+    }
+
+    .cmd {
+      color: var(--text);
+    }
+
+    .hero-title {
+      margin: 18px 0 14px;
+      font-size: clamp(32px, 5vw, 62px);
+      line-height: 1.08;
+      color: var(--green);
+      text-shadow: 0 0 14px rgba(69, 248, 130, 0.12);
+    }
+
+    .hero-desc {
+      max-width: 760px;
+      margin: 0 0 28px;
+      color: #b9d8c1;
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .cta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 140px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(124, 252, 152, 0.22);
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #08110a;
+      box-shadow: 0 0 24px rgba(69, 248, 130, 0.18);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px rgba(69, 248, 130, 0.26);
+    }
+
+    .btn-ghost {
+      color: var(--green);
+      background: rgba(124, 252, 152, 0.05);
+    }
+
+    .btn-ghost:hover {
+      transform: translateY(-1px);
+      background: rgba(124, 252, 152, 0.1);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 28px 0 72px;
+    }
+
+    .card {
+      background: rgba(17, 22, 26, 0.9);
+      border: 1px solid rgba(124, 252, 152, 0.12);
+      border-radius: 16px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .card .label {
+      color: var(--green-strong);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: var(--text);
+    }
+
+    .card p {
+      margin: 0;
+      color: #b2cab8;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .section {
+      padding: 24px 0 84px;
+    }
+
+    .section-title {
+      color: var(--green);
+      font-size: clamp(28px, 4vw, 42px);
+      margin: 0 0 16px;
+    }
+
+    .section-desc {
+      color: #b9d8c1;
+      max-width: 760px;
+      line-height: 1.8;
+      margin: 0 0 28px;
+    }
+
+    .profile-box {
+      background: rgba(17, 22, 26, 0.92);
+      border: 1px solid rgba(124, 252, 152, 0.14);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .profile-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(124, 252, 152, 0.12);
+      color: var(--muted);
+    }
+
+    .profile-body {
+      padding: 24px 20px 26px;
+    }
+
+    .profile-body ul {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0;
+    }
+
+    .profile-body li {
+      padding: 10px 0;
+      border-bottom: 1px dashed rgba(124, 252, 152, 0.12);
+      color: #d3ebda;
+    }
+
+    .profile-body li:last-child {
+      border-bottom: 0;
+    }
+
+    .footer {
+      padding: 0 0 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      background: var(--green-strong);
+      vertical-align: -2px;
+      margin-left: 6px;
+      animation: blink 1s step-end infinite;
+      box-shadow: 0 0 10px rgba(69, 248, 130, 0.55);
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .terminal-body {
+        padding: 24px 18px 28px;
+      }
+
+      .nav-inner {
+        align-items: flex-start;
+        gap: 16px;
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>안녕하세요</h1>
-  <p>GitHub Pages 첫 화면입니다.</p>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="#top" class="brand">jwjung46.github.io</a>
+      <nav class="menu">
+        <a href="#top">메인</a>
+        <a href="#patent">변리사</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero">
+      <div class="terminal">
+        <div class="terminal-top">
+          <div class="dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="terminal-title">terminal://landing-page</div>
+        </div>
+
+        <div class="terminal-body">
+          <div class="line">
+            <span class="prompt">visitor@homepage:~$</span>
+            <span class="cmd">open main</span>
+          </div>
+          <div class="line">
+            <span class="prompt">system:</span>
+            <span class="cmd">ready</span>
+          </div>
+
+          <h1 class="hero-title">안녕하세요.<br>콘솔 스타일 랜딩 페이지입니다<span class="cursor"></span></h1>
+
+          <p class="hero-desc">
+            필요한 정보만 빠르게 보여주는 첫 화면입니다.
+            이 페이지는 소개, 주요 서비스, 변리사 안내, 연락처 영역으로 확장하기 좋게 구성했습니다.
+          </p>
+
+          <div class="cta">
+            <a class="btn btn-primary" href="#top">메인</a>
+            <a class="btn btn-ghost" href="#patent">변리사</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <div class="label">01 / INTRO</div>
+        <h3>첫 인상 전달</h3>
+        <p>처음 들어온 방문자가 사이트의 성격을 바로 이해할 수 있도록 콘솔창 분위기로 구성했습니다.</p>
+      </div>
+      <div class="card">
+        <div class="label">02 / INFO</div>
+        <h3>핵심 정보 집중</h3>
+        <p>장식보다 정보 전달을 우선하는 구조라서 개인 소개 페이지나 사무소 안내 페이지로 바꾸기 쉽습니다.</p>
+      </div>
+      <div class="card">
+        <div class="label">03 / ACTION</div>
+        <h3>버튼 동선 정리</h3>
+        <p>상단 메뉴와 메인 버튼, 변리사 버튼을 같이 두어서 방문자가 원하는 위치로 바로 이동할 수 있습니다.</p>
+      </div>
+    </section>
+
+    <section id="patent" class="section">
+      <h2 class="section-title">변리사</h2>
+      <p class="section-desc">
+        이 구역은 실제 소개 내용으로 바꾸시면 됩니다.
+        이름, 전문 분야, 경력, 상담 가능 분야, 연락처 등을 넣으면 바로 사용 가능합니다.
+      </p>
+
+      <div class="profile-box">
+        <div class="profile-head">profile://patent-attorney</div>
+        <div class="profile-body">
+          <div class="line">
+            <span class="prompt">name:</span>
+            <span class="cmd">홍길동 변리사</span>
+          </div>
+          <div class="line">
+            <span class="prompt">focus:</span>
+            <span class="cmd">특허 · 상표 · 디자인 · 출원 상담</span>
+          </div>
+          <div class="line">
+            <span class="prompt">status:</span>
+            <span class="cmd">consultation available</span>
+          </div>
+
+          <ul>
+            <li>전문 분야: 특허 출원, 상표 등록, 디자인권, 지식재산 자문</li>
+            <li>경력 소개: 이 부분에 실제 경력과 이력을 넣으시면 됩니다</li>
+            <li>연락처: example@email.com</li>
+            <li>상담 안내: 평일 09:00 - 18:00</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      © 2026 jwjung46.github.io
+    </div>
+  </main>
 </body>
 </html>
