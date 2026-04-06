@@ -551,6 +551,33 @@
       padding-top: 4px;
     }
 
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .post-delete-btn {
+      border: 1px solid rgba(255, 107, 107, 0.32);
+      background: rgba(255, 107, 107, 0.08);
+      color: #ff9a9a;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .post-delete-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 107, 107, 0.5);
+      background: rgba(255, 107, 107, 0.14);
+    }
+
     .post-body {
       padding: 20px;
       display: grid;
@@ -835,7 +862,7 @@
       document.documentElement.style.setProperty('--nav-height', `${navHeight}px`);
     }
 
-    const API_BASE = 'https://weathered-math-054e.siro46.workers.dev';
+    const API_BASE = 'https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev';
 
     const toggleComposeBtn = document.getElementById('toggleCompose');
     const composePanel = document.getElementById('composePanel');
@@ -985,7 +1012,17 @@
           <article class="post-card">
             <div class="post-head">
               <h3 class="post-title">${escapeHtml(post.title)}</h3>
-              <div class="post-date">${formatDate(post.createdAt)}</div>
+              <div class="post-meta">
+                <div class="post-date">${formatDate(post.createdAt)}</div>
+                <button
+                  class="post-delete-btn"
+                  type="button"
+                  data-post-id="${post.id}"
+                  aria-label="${escapeHtml(post.title)} 삭제"
+                >
+                  삭제
+                </button>
+              </div>
             </div>
             <div class="post-body">
               <p class="post-text">${escapeHtml(post.body)}</p>
@@ -1094,6 +1131,55 @@
       return result;
     }
 
+    async function deletePostFromServer(postId, adminPassword) {
+      const response = await fetch(`${API_BASE}/api/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'x-admin-password': adminPassword
+        }
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(result.message || '글 삭제에 실패했습니다.');
+      }
+
+      return result;
+    }
+
+    async function handleDeletePost(postId) {
+      const password = window.prompt('관리자 비밀번호를 입력해 주세요.');
+
+      if (password === null) {
+        return;
+      }
+
+      const trimmedPassword = password.trim();
+
+      if (!trimmedPassword) {
+        alert('관리자 비밀번호를 입력해 주세요.');
+        return;
+      }
+
+      const targetPost = posts.find((post) => String(post.id) === String(postId));
+      const titleText = targetPost?.title ? `\n\n제목: ${targetPost.title}` : '';
+
+      const isConfirmed = window.confirm(`이 글을 삭제하시겠습니까?${titleText}`);
+
+      if (!isConfirmed) {
+        return;
+      }
+
+      try {
+        await deletePostFromServer(postId, trimmedPassword);
+        await loadPostsFromServer();
+      } catch (error) {
+        console.error(error);
+        alert(error.message || '글 삭제 중 오류가 발생했습니다.');
+      }
+    }
+
     toggleComposeBtn.addEventListener('click', () => toggleCompose());
 
     imageInput.addEventListener('change', async (event) => {
@@ -1126,6 +1212,16 @@
       const index = Number(button.dataset.index);
       attachedImages.splice(index, 1);
       renderPreview();
+    });
+
+    postsContainer.addEventListener('click', async (event) => {
+      const button = event.target.closest('.post-delete-btn');
+      if (!button) return;
+
+      const postId = Number(button.dataset.postId);
+      if (!postId) return;
+
+      await handleDeletePost(postId);
     });
 
     composeForm.addEventListener('submit', async (event) => {
